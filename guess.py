@@ -2,9 +2,11 @@ import argparse
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--word_file", help="path to file of all words", required=True)
+parser.add_argument("--debug", help="flag to run in debug mode", action="store_true")
 args = parser.parse_args()
 
 word_file = args.word_file
+debug = args.debug
 
 f = open(word_file, 'r')
 words = [s.strip('\n').strip() for s in f.readlines()]
@@ -22,22 +24,26 @@ def occ(string, char):
 def compute_weights():
     weights = [0] * 26
     for word in words:
-        for char in word:
-            if char not in guessed:
-                weights[ord(char) - ord('A')] += 1
+        for i in range(len(word)):
+            if word[i] not in guessed:
+                weights[ord(word[i]) - ord('A')] += 1/(1+occ(word[:i], word[i]))
     for i in range(26):
-        weights[i] = int(weights[i]/len(words) * 1000) + 100
-    print(weights)
+        weights[i] = int(weights[i]/len(words) * 1000) 
+    if debug:
+        print(weights)
     return weights
 
 def get_highest_weight_word(weights):
     best_weight = -1
     best_word = ""
+    print_all = debug and len(words) < 11
     for word in words:
         current_weight = 0
         for i in range(len(word)):
             if occ(word[:i], word[i]) == 0:
                 current_weight += weights[ord(word[i]) - ord('A')]
+        if print_all:
+            print(word, current_weight)
         if current_weight > best_weight:
             best_weight = current_weight
             best_word = word
