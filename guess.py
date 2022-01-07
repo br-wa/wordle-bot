@@ -3,14 +3,18 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("--word_file", help="path to file of all words", required=True)
 parser.add_argument("--debug", help="flag to run in debug mode", action="store_true")
+parser.add_argument("--easy", help="bot plays on easy mode", action="store_true")
 args = parser.parse_args()
 
 word_file = args.word_file
 debug = args.debug
+easy = args.easy
 
 f = open(word_file, 'r')
 words = [s.strip('\n').strip() for s in f.readlines()]
 f.close()
+
+all_words = words[:]
 
 guessed = []
 
@@ -36,8 +40,9 @@ def compute_weights():
 def get_highest_weight_word(weights):
     best_weight = -1
     best_word = ""
-    print_all = debug and len(words) < 11
-    for word in words:
+    print_all = debug and len(words) < 11 and not easy
+    word_list = all_words if easy and len(words) > 10 else words
+    for word in word_list:
         current_weight = 0
         for i in range(len(word)):
             if occ(word[:i], word[i]) == 0:
@@ -47,6 +52,7 @@ def get_highest_weight_word(weights):
         if current_weight > best_weight:
             best_weight = current_weight
             best_word = word
+    print(f"debug: {len(words)} words remaining")
     return best_word, best_weight
     
 def process(guess, res):
