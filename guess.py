@@ -62,7 +62,7 @@ def process(guess, res):
                     valid = False
                     reason = 1
             if res[i] == 'e':
-                if occ(word, guess[i]) == 0:
+                if occ(word, guess[i]) == 0 or word[i] == guess[i]:
                     valid = False
                     reason = 2
             if res[i] == 'n':
@@ -78,7 +78,10 @@ while True:
     guesses += 1
     best_word, best_weight = get_highest_weight_word(compute_weights())
     print(f'Guess {guesses}: {best_word} (weight {best_weight})')
-    res = input('Result? ')
+    while True:
+        res = input('Result? ')
+        if len(res) == len(words[0]):
+            break
     if res == "ccccc":
         exit()
     process(best_word, res)
