@@ -32,7 +32,9 @@ def compute_weights():
             if word[i] not in guessed:
                 weights[ord(word[i]) - ord('A')] += 1/(1+occ(word[:i], word[i]))
     for i in range(26):
-        weights[i] = int(weights[i]/len(words) * 1000) 
+        weights[i] = 500 - int(abs(weights[i]/len(words) - 0.5) * 1000) 
+    for i in [0, 4, 8, 14, 20]:
+        weights[i] /= 2
     if debug:
         print(weights)
     return weights
@@ -41,7 +43,7 @@ def get_highest_weight_word(weights):
     best_weight = -1
     best_word = ""
     print_all = debug and len(words) < 11 and not easy
-    word_list = all_words if easy and len(words) > 10 else words
+    word_list = all_words if easy and len(words) > 2 else words
     for word in word_list:
         current_weight = 0
         for i in range(len(word)):
@@ -85,6 +87,7 @@ while True:
     best_word, best_weight = get_highest_weight_word(compute_weights())
     print(f'Guess {guesses}: {best_word} (weight {best_weight})')
     while True:
+        print("Key: c = correct letter in correct place (green), e = correct letter in wrong place (yellow), n = wrong letter (black)")
         res = input('Result? ')
         if len(res) == len(words[0]):
             break
