@@ -1,4 +1,4 @@
-// g++ -Wall -O2 guess.cpp -o guess 
+// g++ -Wall -O2 guess.cpp -o guess.exe 
 #include <algorithm>
 #include <fstream>
 #include <iostream>

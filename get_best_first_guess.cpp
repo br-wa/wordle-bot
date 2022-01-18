@@ -1,4 +1,4 @@
-// g++ -Wall -O2 get_best_first_guess.cpp -o get_best_first_guess 
+// g++ -Wall -O2 get_best_first_guess.cpp -o get_best_first_guess.exe 
 #include <algorithm>
 #include <fstream>
 #include <iostream>
